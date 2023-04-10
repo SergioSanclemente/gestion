@@ -6,7 +6,7 @@ use App\Models\Problema;
 use App\Models\Cliente;
 use App\Models\Plataforma;
 use Illuminate\Http\Request;
-
+use Storage;
 class ProblemaController extends Controller
 {
     /**
@@ -16,12 +16,11 @@ class ProblemaController extends Controller
      */
     public function index()
     {
-        //
-        // $clientes = Cliente::all();
-        // $plataforma = Plataforma::all();
-      
-        // dd($clientes);
-        return view('problemas.index');
+        
+        $datos['problemas']=Problema::with('cliente')->paginate(5);
+   
+
+        return view('problemas.index',$datos);
 
 
     }
@@ -60,11 +59,15 @@ class ProblemaController extends Controller
             'plataforma_id' => 'required',
             'descripcion' => 'required'
         ]);
-        //dd($request->all());
-       Problema::create($request->all());
+        $datos = $request->except('_token');
+        if ($request->hasFile('img_error')) {
+            $datos['img_error'] = $request->file('img_error')->store('uploads','public');
+        }
+        
+       $data= Problema::create($datos);
         
         return redirect()->route('show-list')
-        ->with('success','Product created successfully.');
+        ->with('mensaje','Problema creado correctamente.');
        
     }
 
@@ -108,8 +111,15 @@ class ProblemaController extends Controller
      * @param  \App\Models\Problema  $problema
      * @return \Illuminate\Http\Response
      */
-    public function destroy(Problema $problema)
+    public function destroy($id)
     {
         //
+        $empleado= Problema::findOrFail($id);
+        if (Storage::delete('public/'.$empleado->img_error)) {
+            Problema::destroy($id);
+        }
+        Problema::destroy($id);
+        return redirect()->route('show-list')->with('mensaje','Problema eliminado.');
+
     }
 }

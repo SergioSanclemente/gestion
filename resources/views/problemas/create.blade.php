@@ -9,20 +9,13 @@
                 <h2>Crear Problemas</h2>
             </div>
             <div class="pull-right">
-                <a class="btn btn-success" href="#">Ir atras</a>
+                <a class="btn btn-success" href="{{ route('show-list') }}"> Ver lista problemas</a>
             </div>
         </div>
 </div>
-{{-- @if ($errors->any())
-    <div class="alert alert-danger">
-        <strong>Whoops!</strong> Hubo algunos problemas con tu entrada..<br><br>
-        <ul>
-            @foreach ($errors->all() as $error)
-                <li>{{ $error }}</li>
-            @endforeach
-        </ul>
-    </div>
-@endif --}}
+@if(Session::has('mensaje'))
+    {{Session::get('mensaje')}}
+@endif
 <form action="{{route('store-data-problem')}}" method="POST" enctype="multipart/form-data">
    @csrf
     <div class="form-group">

@@ -19,13 +19,21 @@ Route::get('/', function () {
     return view('welcome');
 });
 
-Route::get('/dashboardAnalst/create', [ProblemaController::class,'create'])->name('create-data-problem');
-Route::get('/dashboardAnalst/index', [ProblemaController::class,'index'])->name('show-list');
-Route::post('/dashboardAnalst/save', [ProblemaController::class,'store'])->name('store-data-problem');
+Route::controller(ProblemaController::class)->group(function (){
+    Route::get('/dashboardAnalst/create','create')->name('create-data-problem');
+    Route::get('/dashboardAnalst/index','index')->name('show-list');
+    Route::post('/dashboardAnalst/save','store')->name('store-data-problem');
+    Route::delete('/dashboardAnalst/{id}','destroy')->name('delete-data-problem');
+});
 
 
-Route::get('/state/create', [EstadoController::class,'create'])->name('create-data-state');
-Route::get('/state/index', [EstadoController::class,'index'])->name('show-list-state');
-Route::post('/state/save', [EstadoController::class,'store'])->name('store-data-state');
+Route::controller(EstadoController::class)->group(function (){
+    Route::get('/state/create')->name('create-data-state');
+    Route::get('/state/index')->name('show-list-state');
+    Route::post('/state/save')->name('store-data-state');
+   
+});
+
+
 
 
